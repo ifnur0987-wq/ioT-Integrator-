@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IoT dan Jaringan Integrator</title>
+  <!-- Google Fonts & Font Awesome Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+    :root {
+      --primary: #00d2ff;
+      --secondary: #0072ff;
+      --dark: #0f172a;
+      --dark-card: #1e293b;
+      --light: #f8fafc;
+      --text-gray: #94a3b8;
+      --success: #22c55e;
+    }
+    body { background-color: var(--dark); color: var(--light); display: flex; flex-direction: column; min-height: 100vh; }
+    a { text-decoration: none; color: inherit; cursor: pointer; }
+
+    header {
+      background-color: rgba(15, 23, 42, 0.95);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+    }
+    .navbar {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+    }
+    .logo {
+      font-size: 1.4rem;
+      font-weight: 700;
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+    }
+    .nav-links { display: flex; gap: 0.5rem; list-style: none; flex-wrap: wrap; }
+    .nav-links button {
+      background: transparent;
+      border: none;
+      color: var(--light);
+      font-size: 0.95rem;
+      font-weight: 500;
+      padding: 0.5rem 0.8rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .nav-links button:hover, .nav-links button.active {
+      color: var(--primary);
+      background: rgba(0, 210, 255, 0.1);
+    }
+
+    main { flex: 1; max-width: 1200px; width: 100%; margin: 0 auto; padding: 2rem 1rem; }
+    .page { display: none; }
+    .page.active { display: block; animation: fadeIn 0.3s ease-in-out; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    .hero { text-align: center; padding: 2rem 1rem; }
+    .hero h1 {
+      font-size: 2.2rem;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(to right, #fff, var(--primary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .iot-definition {
+      background: var(--dark-card);
+      border-left: 4px solid var(--primary);
+      padding: 1.2rem;
+      border-radius: 8px;
+      max-width: 800px;
+      margin: 0 auto 2rem;
+      text-align: left;
+      line-height: 1.8;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    }
+    .hero-buttons { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+
+    .btn {
+      padding: 0.8rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-primary { background: linear-gradient(45deg, var(--primary), var(--secondary)); color: #fff; }
+    .btn-primary:hover { opacity: 0.9; }
+    .btn-outline { border: 2px solid var(--primary); color: var(--primary); background: transparent; }
+
+    .section-title { font-size: 1.8rem; margin-bottom: 2rem; text-align: center; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
+    .card {
+      background: var(--dark-card);
+      border-radius: 12px;
+      padding: 1.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .card-icon { font-size: 2.2rem; color: var(--primary); margin-bottom: 1rem; }
+    .card h3 { font-size: 1.2rem; margin-bottom: 0.5rem; }
+    .card p { color: var(--text-gray); font-size: 0.9rem; margin-bottom: 1.2rem; }
+    .card-price { font-size: 1.1rem; font-weight: 700; color: var(--success); margin-bottom: 1rem; }
+
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; }
+    .feature-item { background: var(--dark-card); padding: 1.5rem; border-radius: 10px; text-align: center; }
+    .feature-item i { font-size: 2.5rem; color: var(--primary); margin-bottom: 1rem; }
+
+    .contact-container { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; background: var(--dark-card); padding: 2rem; border-radius: 16px; }
+    @media (max-width: 768px) { 
+      .contact-container { grid-template-columns: 1fr; } 
+      .navbar { flex-direction: column; gap: 1rem; }
+      .nav-links { justify-content: center; } 
+    }
+
+    .contact-info div { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.2rem; }
+    .contact-info i { font-size: 1.3rem; color: var(--primary); width: 25px; }
+    .social-links { display: flex; gap: 1rem; margin-top: 1.5rem; }
+    .social-btn { width: 45px; height: 45px; border-radius: 50%; background: rgba(255, 255, 255, 0.05); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+
+    .order-form { display: flex; flex-direction: column; gap: 1rem; }
+    .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+    .form-group label { font-size: 0.9rem; color: var(--text-gray); }
+    .form-group input, .form-group select, .form-group textarea {
+      padding: 0.8rem; border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.1); background: #0f172a; color: #fff; outline: none;
+    }
+
+    footer { background-color: #0b1120; text-align: center; padding: 1.5rem; margin-top: auto; color: var(--text-gray); font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header>
+    <nav class="navbar">
+      <div class="logo" onclick="switchPage('home')">
+        <i class="fa-solid fa-network-wired"></i> IoT Integrator
+      </div>
+      <div class="nav-links">
+        <button onclick="switchPage('home')" id="btn-home" class="active">Beranda</button>
+        <button onclick="switchPage('produk')" id="btn-produk">Produk IoT</button>
+        <button onclick="switchPage('jasa')" id="btn-jasa">Paket Jasa</button>
+        <button onclick="switchPage('mengapa-kami')" id="btn-mengapa-kami">Mengapa Kami?</button>
+        <button onclick="switchPage('kontak')" id="btn-kontak">Kontak & Pesan</button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <!-- HALAMAN BERANDA -->
+    <section id="home" class="page active">
+      <div class="hero">
+        <h1>IoT dan Jaringan Integrator</h1>
+        <div class="iot-definition">
+          <h3><i class="fa-solid fa-circle-info"></i> Apa itu IoT?</h3>
+          <p><strong>Internet of Things (IoT)</strong> adalah konsep di mana benda fisik dilengkapi sensor dan internet untuk saling terhubung, mengumpulkan data, dan bertukar informasi secara otomatis tanpa bantuan manusia.</p>
+        </div>
+        <div class="hero-buttons">
+          <button class="btn btn-primary" onclick="switchPage('produk')"><i class="fa-solid fa-cart-shopping"></i> Lihat Produk</button>
+          <button class="btn btn-outline" onclick="switchPage('jasa')"><i class="fa-solid fa-list-check"></i> Paket Jasa</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- HALAMAN PRODUK -->
+    <section id="produk" class="page">
+      <h2 class="section-title">Katalog Produk IoT</h2>
+      <div class="grid">
+        <div class="card">
+          <div><i class="fa-solid fa-lightbulb card-icon"></i><h3>Smart Lamp</h3><p>Lampu pintar dengan kontrol kecerahan & warna via aplikasi mobile.</p></div>
+          <button class="btn btn-primary" onclick="quickOrder('Barang', 'Smart Lamp')">Beli Sekarang</button>
+        </div>
+        <div class="card">
+          <div><i class="fa-solid fa-heart-pulse card-icon"></i><h3>Smart Health</h3><p>Perangkat pemantau kesehatan otomatis terhubung ke cloud.</p></div>
+          <button class="btn btn-primary" onclick="quickOrder('Barang', 'Smart Health')">Beli Sekarang</button>
+        </div>
+        <div class="card">
+          <div><i class="fa-solid fa-city card-icon"></i><h3>Smart City</h3><p>Solusi infrastruktur cerdas untuk lingkungan perkotaan modern.</p></div>
+          <button class="btn btn-primary" onclick="quickOrder('Barang', 'Smart City')">Beli Sekarang</button>
+        </div>
+        <div class="card">
+          <div><i class="fa-solid fa-lock card-icon"></i><h3>Smart Lock</h3><p>Sistem kunci pintu digital keamanan tinggi dengan enkripsi.</p></div>
+          <button class="btn btn-primary" onclick="quickOrder('Barang', 'Smart Lock')">Beli Sekarang</button>
+        </div>
+        <div class="card">
+          <div><i class="fa-solid fa-plug card-icon"></i><h3>Smart Plug</h3><p>Stopkontak pintar untuk manajemen energi otomatis.</p></div>
+          <button class="btn btn-primary" onclick="quickOrder('Barang', 'Smart Plug')">Beli Sekarang</button>
+        </div>
+        <div class="card">
+          <div><i class="fa-solid fa-video card-icon"></i><h3>Smart CCTV</h3><p>Kamera pengawas dengan AI pendeteksi gerakan real-time.</p></div>
+          <button class="btn btn-primary" onclick="quickOrder('Barang', 'Smart CCTV')">Beli Sekarang</button>
+        </div>
+        <div class="card">
+          <div><i class="fa-solid fa-boxes-stacked card-icon"></i><h3>Smart Shelf</h3><p>Rak inventaris pintar yang mencatat stok otomatis.</p></div>
+          <button class="btn btn-primary" onclick="quickOrder('Barang', 'Smart Shelf')">Beli Sekarang</button>
+        </div>
+        <div class="card">
+          <div><i class="fa-solid fa-tag card-icon"></i><h3>Smart Tag</h3><p>Pelacak lokasi aset berukuran kecil dengan presisi tinggi.</p></div>
+          <button class="btn btn-primary" onclick="quickOrder('Barang', 'Smart Tag')">Beli Sekarang</button>
+        </div>
+        <div class="card">
+          <div><i class="fa-solid fa-smog card-icon"></i><h3>Smart Smoke Detector</h3><p>Pendeteksi asap dengan notifikasi darurat langsung ke HP.</p></div>
+          <button class="btn btn-primary" onclick="quickOrder('Barang', 'Smart Smoke Detector')">Beli Sekarang</button>
+        </div>
+        <div class="card">
+          <div><i class="fa-solid fa-square-park card-icon"></i><h3>Smart Parking System</h3><p>Sistem deteksi ketersediaan slot parkir secara otomatis.</p></div>
+          <button class="btn btn-primary" onclick="quickOrder('Barang', 'Smart Parking System')">Beli Sekarang</button>
+        </div>
+        <div class="card">
+          <div><i class="fa-solid fa-gauge-high card-icon"></i><h3>Smart Tire Pressure Monitoring System</h3><p>Pemantau tekanan dan suhu ban secara real-time.</p></div>
+          <button class="btn btn-primary" onclick="quickOrder('Barang', 'Smart Tire Pressure Monitoring System')">Beli Sekarang</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- HALAMAN JASA -->
+    <section id="jasa" class="page">
+      <h2 class="section-title">Paket Layanan Jasa</h2>
+      <div class="grid">
+        <div class="card">
+          <div>
+            <i class="fa-solid fa-feather card-icon"></i><h3>Paket Lite</h3>
+            <p>Cocok untuk kebutuhan skala rumah tangga atau ruang kerja kecil.</p>
+            <div class="card-price">Rp 850.000</div>
+          </div>
+          <button class="btn btn-primary" onclick="quickOrder('Jasa', 'Paket Lite (Rp 850.000)')">Pilih Paket</button>
+        </div>
+        <div class="card">
+          <div>
+            <i class="fa-solid fa-briefcase card-icon"></i><h3>Paket Profesional</h3>
+            <p>Solusi ideal untuk perkantoran, kafe, atau ruko menengah.</p>
+            <div class="card-price">Rp 2.250.000</div>
+          </div>
+          <button class="btn btn-primary" onclick="quickOrder('Jasa', 'Paket Profesional (Rp 2.250.000)')">Pilih Paket</button>
+        </div>
+        <div class="card">
+          <div>
+            <i class="fa-solid fa-industry card-icon"></i><h3>Paket Industrial</h3>
+            <p>Integrasi komprehensif untuk pabrik, gudang, dan jaringan kompleks.</p>
+            <div class="card-price">Rp 4.800.000</div>
+          </div>
+          <button class="btn btn-primary" onclick="quickOrder('Jasa', 'Paket Industrial (Rp 4.800.000)')">Pilih Paket</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- HALAMAN MENGAPA KAMI -->
+    <section id="mengapa-kami" class="page">
+      <h2 class="section-title">Mengapa Memilih Kami?</h2>
+      <div class="features-grid">
+        <div class="feature-item">
+          <i class="fa-solid fa-wifi"></i>
+          <h3>Jaringan Stabil & Minim Lag</h3>
+          <p>Desain topologi jaringan rapi dengan bandwidth management yang optimal.</p>
+        </div>
+        <div class="feature-item">
+          <i class="fa-solid fa-robot"></i>
+          <h3>Otomatisasi Sistem Berbasis IoT</h3>
+          <p>Kontrol dan pantau perangkat fisik dari jarak jauh melalui aplikasi HP.</p>
+        </div>
+        <div class="feature-item">
+          <i class="fa-solid fa-shield-halved"></i>
+          <h3>Sistem Keamanan Terjamin</h3>
+          <p>Perlindungan dari kejahatan siber, pembatasan akses, dan backup otomatis.</p>
+        </div>
+        <div class="feature-item">
+          <i class="fa-solid fa-headset"></i>
+          <h3>Dukungan & Perawatan Rutin</h3>
+          <p>Layanan maintenance responsif dan pemeliharaan berkala dari tim berpengalaman.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- HALAMAN KONTAK -->
+    <section id="kontak" class="page">
+      <h2 class="section-title">Kontak & Pemesanan</h2>
+      <div class="contact-container">
+        <div class="contact-info">
+          <h3>Hubungi Kami</h3>
+          <p style="margin-bottom: 1.5rem; color: var(--text-gray);">
+            Pilih barang atau jasa yang ingin Anda pesan. Form ini akan otomatis menghubungkan Anda ke WhatsApp.
+          </p>
+          <div><i class="fa-brands fa-whatsapp"></i><span>+62 857-2370-0804</span></div>
+          <div><i class="fa-solid fa-envelope"></i><span>ikyy75175@gmail.com</span></div>
+          <div><i class="fa-brands fa-instagram"></i><span>nicky_ifnur.z</span></div>
+          <div class="social-links">
+            <a href="https://api.whatsapp.com/send?phone=6285723700804" target="_top" class="social-btn"><i class="fa-brands fa-whatsapp"></i></a>
+            <a href="mailto:ikyy75175@gmail.com" class="social-btn"><i class="fa-solid fa-envelope"></i></a>
+            <a href="https://instagram.com/nicky_ifnur.z" target="_top" class="social-btn"><i class="fa-brands fa-instagram"></i></a>
+          </div>
+        </div>
+
+        <form class="order-form" id="whatsappForm">
+          <div class="form-group">
+            <label for="nama">Nama Lengkap</label>
+            <input type="text" id="nama" placeholder="Masukkan nama Anda" required>
+          </div>
+          <div class="form-group">
+            <label for="kategori">Kategori Pesanan</label>
+            <select id="kategori" onchange="updateOptions()">
+              <option value="Barang">Produk IoT (Barang)</option>
+              <option value="Jasa">Paket Layanan (Jasa)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="itemPilihan">Pilih Barang / Jasa</label>
+            <select id="itemPilihan"></select>
+          </div>
+          <div class="form-group">
+            <label for="catatan">Pesan Tambahan</label>
+            <textarea id="catatan" rows="3" placeholder="Tulis catatan atau pertanyaan spesifik..."></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary" style="justify-content: center;">
+            <i class="fa-brands fa-whatsapp"></i> Kirim via WhatsApp
+          </button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 IoT dan Jaringan Integrator. All Rights Reserved.</p>
+  </footer>
+
+  <script>
+    const produkList = [
+      "Smart Lamp", "Smart Health", "Smart City", "Smart Lock", 
+      "Smart Plug", "Smart CCTV", "Smart Shelf", "Smart Tag", 
+      "Smart Smoke Detector", "Smart Parking System", "Smart Tire Pressure Monitoring System"
+    ];
+
+    const jasaList = [
+      "Paket Lite (Rp 850.000)", 
+      "Paket Profesional (Rp 2.250.000)", 
+      "Paket Industrial (Rp 4.800.000)"
+    ];
+
+    function switchPage(pageId) {
+      const pages = document.querySelectorAll('.page');
+      pages.forEach(page => page.classList.remove('active'));
+
+      const buttons = document.querySelectorAll('.nav-links button');
+      buttons.forEach(btn => btn.classList.remove('active'));
+
+      document.getElementById(pageId).classList.add('active');
+      const activeBtn = document.getElementById('btn-' + pageId);
+      if (activeBtn) activeBtn.classList.add('active');
+
+      window.scrollTo(0, 0);
+    }
+
+    function updateOptions() {
+      const kategori = document.getElementById("kategori").value;
+      const selectItem = document.getElementById("itemPilihan");
+      selectItem.innerHTML = "";
+
+      const items = (kategori === "Barang") ? produkList : jasaList;
+      items.forEach(item => {
+        const option = document.createElement("option");
+        option.value = item;
+        option.textContent = item;
+        selectItem.appendChild(option);
+      });
+    }
+
+    function quickOrder(kategori, itemName) {
+      switchPage('kontak');
+      document.getElementById('kategori').value = kategori;
+      updateOptions();
+      
+      const selectItem = document.getElementById('itemPilihan');
+      for (let i = 0; i < selectItem.options.length; i++) {
+        if (selectItem.options[i].value.includes(itemName)) {
+          selectItem.selectedIndex = i;
+          break;
+        }
+      }
+    }
+
+    // PENGIRIMAN WHATSAPP YANG SUDAH DIPERBAIKI UNTUK HP
+    document.getElementById("whatsappForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      
+      const nama = document.getElementById("nama").value;
+      const kategori = document.getElementById("kategori").value;
+      const item = document.getElementById("itemPilihan").value;
+      const catatan = document.getElementById("catatan").value;
+      
+      const noHp = "6285723700804";
+      
+      let pesanText = `Halo Admin, saya ingin memesan:\n\n`;
+      pesanText += `*Nama:* ${nama}\n`;
+      pesanText += `*Kategori:* ${kategori}\n`;
+      pesanText += `*Pilihan:* ${item}\n`;
+      if(catatan.trim() !== "") {
+        pesanText += `*Catatan:* ${catatan}\n`;
+      }
+      pesanText += `\nTerima kasih.`;
+
+      const encodedText = encodeURIComponent(pesanText);
+      
+      // Menggunakan URL Universal api.whatsapp.com & window.location.href agar aman di HP
+      window.location.href = `https://api.whatsapp.com/send?phone=${noHp}&text=${encodedText}`;
+    });
+
+    window.onload = function() {
+      updateOptions();
+    };
+  </script>
+</body>
+</html>
